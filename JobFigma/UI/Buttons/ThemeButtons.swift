@@ -6,15 +6,18 @@
 //
 
 import SwiftUI
+import Awesome
 
 enum BtnType {
     case primary
     case roundIcon
+    case filterIcon
+    case menuIcon
     case facebook
     case google
 }
 
-struct BtnMain: View {
+struct ThemeButton: View {
     
     
     
@@ -30,28 +33,32 @@ struct BtnMain: View {
             
             switch type {
                 case .primary:
-                    VStack {
-                        Button(action: {action()}, label: {
-                            HStack {
-                                if iconLeft ?? false {
-                                    Image(systemName: icon ?? "")
-                                }
-                                Text(text ?? "Btn Text")
-                                    .padding(.horizontal, 8)
-                                if iconRight ?? false {
-                                    Image(systemName: icon ?? "")
-                                }
-                                
-                                
+                VStack {
+                    Button(action: { action() }, label: {
+                        HStack {
+                            Spacer()
+                            if iconLeft ?? false {
+                                Image(systemName: icon ?? "")
                             }
-                        })
-                    }
-                    .padding(.horizontal, 100)
+                            
+                            Text(text ?? "Btn Text")
+                                .padding(.horizontal, 8)
+                            if iconRight ?? false {
+                                Image(systemName: icon ?? "")
+                            }
+                            Spacer() // Add Spacer to expand and fill available width
+                        }
+                    })
+                    .padding(.horizontal, 16) // Adjust horizontal padding as needed
                     .padding(.vertical, 16)
-                    .background(Color("Primary"))
+                    
                     .cornerRadius(10)
                     .foregroundColor(.white)
-                    .frame(maxWidth: .infinity)
+                }
+               
+                .frame(maxWidth: .infinity)
+                
+                
                 
             case .roundIcon:
                 VStack {
@@ -62,43 +69,75 @@ struct BtnMain: View {
                 
                 .padding(.horizontal, 16)
                 .padding(.vertical, 16)
-                .background(Color("Primary"))
+                .background(Color("PrimaryThemeColor"))
                 .cornerRadius(100)
                 .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
+                
+            
+            
+            case .menuIcon:
+                VStack {
+                    Button(action: {action()}, label: {
+                        Awesome.Solid.bars.image
+                            .foregroundColor(.white)
+                    })
+                }
+                .frame(minWidth: 24, minHeight: 24)
+                .padding(.horizontal, 12)
+                .padding(.vertical,12)
+                .background(Color("PrimaryThemeColor"))
+                .cornerRadius(4)
+                
+                
+            
+            case .filterIcon:
+                VStack {
+                    Button(action: {action()}, label: {
+                        Awesome.Solid.slidersH.image
+                            .foregroundColor(.white)
+                    })
+                }
+                .frame(minWidth: 24, minHeight: 24)
+                .padding(.horizontal, 12)
+                .padding(.vertical,12)
+                .background(Color.gray.opacity(0.5))
+                .cornerRadius(4)
+                
+                
+  
                 
             
             case .facebook:
-                VStack {
+                Button(action: {action()}, label: {
                     HStack {
-                        Image(systemName: "f.square.fill")
-                        Text("Anmelden mit Facebook")
+                        Awesome.Brand.facebookF.image
+                            .foregroundColor(.white)
                     }
-                }
-                
-                .padding(.horizontal, 16)
-                .padding(.vertical, 16)
-                .background(Color("Primary"))
-                .cornerRadius(10)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
+                    
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 16)
+                    .background(Color.gray.opacity(0.5))
+                    .cornerRadius(100)
+                    .foregroundColor(.white)
+                })
                 
                 
                 
             case .google:
-                VStack {
+                Button(action: {action()}, label: {
                     HStack {
-                        Image(systemName: "g.square.fill")
-                        Text("Anmelden mit Google")
+                        
+                        Awesome.Brand.google.image
+                            .foregroundColor(.white)
                     }
-                }
-                
-                .padding(.horizontal, 16)
-                .padding(.vertical, 16)
-                .background(Color("Primary"))
-                .cornerRadius(10)
-                .foregroundColor(.white)
-                .frame(maxWidth: .infinity)
+                    
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 16)
+                    .background(Color.gray.opacity(0.5))
+                    .cornerRadius(100)
+                    .foregroundColor(.white)
+                })
+               
                 
                 
             }
@@ -116,7 +155,7 @@ struct BtnMain: View {
         }
         .padding(.vertical)
         
-        BtnMain(
+        ThemeButton(
             iconLeft: false,
             iconRight: true,
             icon: "arrow.right",
@@ -125,8 +164,8 @@ struct BtnMain: View {
             action: {
                 print("Button tapped")
             }
-        )
-        BtnMain(
+        ) .background(Color("PrimaryThemeColor"))
+        ThemeButton(
             iconLeft: true,
             iconRight: false,
             icon: "arrow.left",
@@ -135,7 +174,7 @@ struct BtnMain: View {
             action: {
                 print("Button tapped")
             }
-        )
+        ) .background(Color("PrimaryThemeColor"))
         
         
         VStack {
@@ -145,13 +184,39 @@ struct BtnMain: View {
         .padding(.vertical)
         
 
-            BtnMain(
+        ThemeButton(
                 icon: "plus",
                 type: .roundIcon,
                 action: {
-                    print("Button tapped")
+                    print("Button tapped plus")
                 }
             )
+        
+        VStack {
+            Text ("Square Button with Icon")
+            
+        }
+        .padding(.vertical)
+        
+        HStack (spacing:5) {
+            
+            ThemeButton(
+                icon: "plus",
+                type: .filterIcon ,
+                action: {
+                    print("Button tapped plus")
+                }
+            )
+            
+            ThemeButton(
+                icon: "plus",
+                type: .menuIcon ,
+                action: {
+                    print("Button tapped plus")
+                }
+            )
+            
+        }
         
         VStack {
             Text ("Social Media Login Buttons")
@@ -159,23 +224,29 @@ struct BtnMain: View {
         }
         .padding(.vertical)
         
-        BtnMain(
-            icon: "plus",
-            type: .facebook,
-            action: {
-                print("Button tapped")
-            }
-        )
-        
-        
-        BtnMain(
-            icon: "plus",
-            type: .google,
-            action: {
-                print("Button tapped")
-            }
-        )
+        HStack (spacing:5) {
             
+           
+            ThemeButton(
+                icon: "plus",
+                type: .facebook,
+                action: {
+                    print("Button tapped")
+                }
+            )
+           
+            
+            
+            ThemeButton(
+                icon: "plus",
+                type: .google,
+                action: {
+                    print("Button tapped")
+                }
+            ) 
+            
+            
+        }
            
             
         

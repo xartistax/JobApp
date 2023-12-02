@@ -12,51 +12,114 @@ enum FieldType {
     case password
 }
 
+
+
 struct Fields: View {
     var icon: String
     var type: FieldType
     var placeholder: String
+    var isSecureField: Bool
+    var keyboardType: UIKeyboardType
+    @State private var showPassword = false
+    @Binding var text: String
     
-    @State private var text: String = "" // State variable for text input
-    
-    init(icon: String, type: FieldType, placeholder: String) {
-        self.icon = icon
-        self.type = type
-        self.placeholder = placeholder
-        _text = State(initialValue: placeholder) // Initialize text with the placeholder
-    }
+    var fieldPadding: Bool // Removed initialization here
+
+        init(icon: String, type: FieldType, placeholder: String, isSecureField: Bool, keyboardType: UIKeyboardType, text: Binding<String>) {
+            self.icon = icon
+            self.type = type
+            self.placeholder = placeholder
+            self.isSecureField = isSecureField
+            self.keyboardType = keyboardType
+            self._text = text
+            
+            // Initialize fieldPadding based on the condition
+            self.fieldPadding = icon.isEmpty
+        }
+
     
     var body: some View {
-        VStack {
-            HStack {
-                HStack {
-                    Image(systemName: icon)
-                        .frame(maxHeight: 56)
-                        .frame(maxWidth: 56)
-                        .background(Color(UIColor.lightGray))
-                        .foregroundColor(Color.white)
-                    
-                    TextEditor(text: $text)
-                        .padding(8)
-                        .frame(height: 56)
-                        .foregroundColor(Color(UIColor.placeholderText))
-                    
-                    if type == .password {
-                                        Image(systemName: "eye")
-                                            .frame(maxHeight: 56)
-                                            .frame(maxWidth: 56)
-                                            .font(.system(size: 16))
-                                            .foregroundColor(Color(UIColor.placeholderText))
-                                    }
-                }
-                .background(Color.white)
-                .cornerRadius(8)
+        HStack {
+            if (!icon.isEmpty) {
+                Image(systemName: icon )
+                    .padding()
+                    .frame(width: 57)
+                    .foregroundColor(.black.opacity(0.25))
+                    .background(Color(UIColor.lightGray).opacity(0))
             }
-            .padding(.horizontal)
+            
+            if isSecureField {
+                
+                if type == .password {
+                    
+                    if showPassword {
+                                        TextField(placeholder, text: $text)
+                                            .keyboardType(keyboardType)
+                                    } else {
+                                        SecureField(placeholder, text: $text)
+                                            .keyboardType(keyboardType)
+                                    }
+                    
+                    
+                    
+                } else {
+                    TextField(placeholder, text: $text)
+                        .keyboardType(keyboardType) // Apply keyboard type
+                }
+            } else {
+                
+                TextField(placeholder, text: $text)
+                    .keyboardType(keyboardType) // Apply keyboard type
+            }
+            
+            if type == .password {
+                Button(action: {
+                    // Implement toggle for password visibility
+                    showPassword.toggle()
+                }) {
+                    Image(systemName: showPassword ? "eye" : "eye.slash")
+                        .foregroundColor(  showPassword ? Color("PrimaryThemeColor") : Color(UIColor.placeholderText)  )
+                    
+                }
+                .padding()
+            }
         }
+        .padding(fieldPadding ? .leading : [])
+        .frame(minHeight: 50)
+        .textContentType(.none) // Set text content type to none
+        .autocapitalization(.none)
+        .background(Color.white)
+        .cornerRadius(8)
+        .customBorder(cornerRadius: 8)
+        .shadow(color: Color.black.opacity(0.05), radius: 15, x: 3, y: 6)
+        
     }
 }
 
+
+
+
+
+
+
+
+struct CustomBorder: ViewModifier {
+    var cornerRadius: CGFloat
+
+    func body(content: Content) -> some View {
+        content
+            .overlay(
+                RoundedRectangle(cornerRadius: cornerRadius)
+                    .stroke(Color.black.opacity(0.15), lineWidth: 1)
+            )
+    }
+}
+
+extension View {
+    func customBorder(cornerRadius: CGFloat) -> some View {
+        self.modifier(CustomBorder(cornerRadius: cornerRadius))
+    }
+}
 
 
 
@@ -64,9 +127,10 @@ struct Fields: View {
     Group {
         VStack {
             Text("Formfields").padding(.vertical)
-            Fields(icon: "person", type: .textfield, placeholder: "Username")
-            Fields(icon: "at", type: .textfield, placeholder: "Email")
-            Fields(icon: "lock", type: .password, placeholder: "Password")
+            Fields(icon: "", type: .textfield, placeholder: "Username", isSecureField : false, keyboardType: .default , text: .constant(""))
+            Fields(icon: "person", type: .textfield, placeholder: "Username", isSecureField : false, keyboardType: .default , text: .constant(""))
+            Fields(icon: "at", type: .textfield, placeholder: "Email", isSecureField : false, keyboardType: .emailAddress, text: .constant(""))
+            Fields(icon: "lock", type: .password, placeholder: "Password", isSecureField : true, keyboardType: .default, text: .constant(""))
         }
         .frame(maxWidth: .infinity)
         .frame(maxHeight: .infinity)

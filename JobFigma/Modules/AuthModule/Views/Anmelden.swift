@@ -8,10 +8,19 @@
 import SwiftUI
 
 struct Anmelden: View {
+    
+    @State private var email: String = ""
+    @State private var password: String = ""
+    @ObservedObject var avm : AppViewModel
+    
+    var isRegistrationEnabled: Bool {
+            !email.isEmpty && !password.isEmpty
+        }
+    
     var body: some View {
         VStack (alignment:.leading) {
             Spacer()
-            VStack {
+            VStack (alignment:.leading) {
                 HStack {
                     Text("Willkommen zurück!")
                         .font(.title)
@@ -21,13 +30,16 @@ struct Anmelden: View {
                 
                 
                 Text("Melde dich an mit deine Email Adresse oder per Social Media")
-                    
+                    .fontWeight(.light)
+                    .font(.headline)
+                    .multilineTextAlignment(.leading)
+                
             } .multilineTextAlignment(.leading)
                 .padding(.bottom,32)
             
             VStack {
-                Fields(icon: "at", type: .textfield, placeholder: "E-Mail Adresse", isSecureField: false)
-                Fields(icon: "lock", type: .textfield, placeholder: "Passwort", isSecureField: true)
+                Fields(icon: "at", type: .textfield, placeholder: "E-Mail Adresse", isSecureField: false, keyboardType: .emailAddress, text: $email)
+                Fields(icon: "lock", type: .password, placeholder: "Password", isSecureField : true, keyboardType: .default, text: $password)
                 
                 VStack {
                     ThemeButton(
@@ -37,9 +49,15 @@ struct Anmelden: View {
                         text: "Anmelden",
                         type: .primary,
                         action: {
-                            print("Button tapped")
+                            // print(email)
+                            // print(password)
+                            
+                            avm.selectedView = .mainView
                         }
                     )
+                    .disabled(!isRegistrationEnabled)
+                        .background( isRegistrationEnabled ? Color("PrimaryThemeColor") : Color("PrimaryThemeColor").opacity(0.5) )
+                        .cornerRadius(10)
                 } .padding(.top,16) .padding(.bottom, 64)
                 
                 VStack {
@@ -59,7 +77,9 @@ struct Anmelden: View {
                         text: "Anmelden",
                         type: .google,
                         action: {
-                            print("google Login")
+                           
+                            
+                            avm.selectedView = .mainView
                         }
                     ) 
                     
@@ -70,7 +90,8 @@ struct Anmelden: View {
                         text: "Anmelden",
                         type: .facebook,
                         action: {
-                            print("facebook Login")
+                            
+                            avm.selectedView = .mainView
                         }
                     )
                     
@@ -86,12 +107,19 @@ struct Anmelden: View {
                 HStack {
                     Spacer()
                     
-                    Text("Bist du neu hier?")
-                    Text("Registriere dich hier")
-                        .fontWeight(.bold)
+                    Button(action: {
+                        avm.selectedView = .registrierenView
+                    }){
+                        Text("Bist du neu hier?")
+                        Text("Registriere dich hier")
+                            .fontWeight(.bold)
+                    }
+                    
+                    
                     
                     Spacer()
                 }
+                .foregroundColor(.black)
                 .opacity(0.5)
                 .font(.footnote)
             }
@@ -101,5 +129,5 @@ struct Anmelden: View {
 }
 
 #Preview {
-    Anmelden()
+    Anmelden(avm: AppViewModel())
 }

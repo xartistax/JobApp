@@ -8,11 +8,22 @@
 import SwiftUI
 
 struct NotificationIndicator: View {
+    let count: Int
+
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        ZStack {
+            Circle()
+                .foregroundColor(Color("PrimaryThemeColor")) 
+                .frame(width: 24, height: 24)
+            
+            Text("\(count)")
+                .foregroundColor(.white)
+                .font(.caption)
+        }
     }
 }
 
+
 #Preview {
-    NotificationIndicator()
+    NotificationIndicator(count: 5)
 }

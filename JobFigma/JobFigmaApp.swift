@@ -9,9 +9,12 @@ import SwiftUI
 
 @main
 struct JobFigmaApp: App {
+    
+ 
+    
     var body: some Scene {
         WindowGroup {
-            ContentView()
+            WelcomeView(avm: AppViewModel())
         }
     }
 }

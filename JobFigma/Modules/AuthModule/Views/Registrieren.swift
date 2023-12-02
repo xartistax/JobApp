@@ -8,10 +8,23 @@
 import SwiftUI
 
 struct Registrieren: View {
+    
+    @State private var email: String = ""
+    @State private var password: String = ""
+    @State private var passwordRepeat: String = ""
+    @ObservedObject var avm : AppViewModel
+    
+    var isRegistrationEnabled: Bool {
+            !email.isEmpty && !password.isEmpty && !passwordRepeat.isEmpty && password == passwordRepeat
+        }
+    
     var body: some View {
+        
+
+        
         VStack (alignment:.leading) {
             Spacer()
-            VStack {
+            VStack (alignment:.leading) {
                 HStack {
                     Text("Erstelle deinen Account")
                         .font(.title)
@@ -21,14 +34,17 @@ struct Registrieren: View {
                 
                 
                 Text("Registriere dich mit deiner Email Adresse oder per Social Media")
+                    .fontWeight(.light)
+                    .font(.headline)
+                    .multilineTextAlignment(.leading)
                     
             } .multilineTextAlignment(.leading)
                 .padding(.bottom,32)
             
             VStack {
-                Fields(icon: "at", type: .textfield, placeholder: "E-Mail Adresse", isSecureField: false)
-                Fields(icon: "lock", type: .textfield, placeholder: "Passwort", isSecureField: true)
-                Fields(icon: "lock", type: .textfield, placeholder: "Passwort wiederholen", isSecureField: true)
+                Fields(icon: "at", type: .textfield, placeholder: "E-Mail Adresse", isSecureField: false, keyboardType: .emailAddress, text: $email)
+                Fields(icon: "lock", type: .password, placeholder: "Passwort", isSecureField: true, keyboardType: .default, text: $password)
+                Fields(icon: "lock", type: .password, placeholder: "Passwort wiederholen", isSecureField: true, keyboardType: .default, text: $passwordRepeat)
                 
                 VStack {
                     ThemeButton(
@@ -38,9 +54,18 @@ struct Registrieren: View {
                         text: "Account erstellen",
                         type: .primary,
                         action: {
-                            print("Button tapped")
+                            // print(email)
+                            // print(password)
+                            
+                            avm.selectedView = .mainView
                         }
                     )
+                    .disabled(!isRegistrationEnabled)
+                    .background( isRegistrationEnabled ? Color("PrimaryThemeColor") : Color("PrimaryThemeColor").opacity(0.5) )
+                    .cornerRadius(10)
+                    
+                            
+                    
                 } .padding(.top,16) .padding(.bottom, 64)
                 
                 VStack {
@@ -60,7 +85,7 @@ struct Registrieren: View {
                         text: "Anmelden",
                         type: .google,
                         action: {
-                            print("google Register")
+                            avm.selectedView = .mainView
                         }
                     )
                     
@@ -71,7 +96,9 @@ struct Registrieren: View {
                         text: "Anmelden",
                         type: .facebook,
                         action: {
-                            print("facebook Register")
+                           
+                            
+                            avm.selectedView = .mainView
                         }
                     )
                     
@@ -84,24 +111,37 @@ struct Registrieren: View {
             Spacer()
             
             VStack {
+                
                 HStack {
                     Spacer()
                     
-                    Text("Hast du bereits einen Account?")
-                    Text("Melde dich an")
-                        .fontWeight(.bold)
-                        
+                    Button(action: {
+                        avm.selectedView = .anmeldenView
+                    }){
+                        Text("Hast du bereits einen Account?")
+                        Text("Melde dich an")
+                            .fontWeight(.bold)
+                    } .disabled(false)
+                    
+                    
                     
                     Spacer()
                 }
+                .foregroundColor(.black)
                 .opacity(0.5)
                 .font(.footnote)
+                
+                
+               
             }
             
         } .padding() .background(Color("Light"))
     }
 }
 
+
+
+
 #Preview {
-    Registrieren()
+    Registrieren(avm: AppViewModel())
 }

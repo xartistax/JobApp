@@ -1,0 +1,41 @@
+{
+  "pins" : [
+    {
+      "identity" : "awesome",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/LiveUI/Awesome.git",
+      "state" : {
+        "revision" : "40c68d0ca2b143c1118e636518706a4b8332777b",
+        "version" : "2.4.0"
+      }
+    },
+    {
+      "identity" : "sidemenu",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/xartistax/SideMenu.git",
+      "state" : {
+        "branch" : "main",
+        "revision" : "661fca6537fca3681a10e7479afd21364a7177e3"
+      }
+    },
+    {
+      "identity" : "snappinglayout",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/getmimo/SnappingLayout.git",
+      "state" : {
+        "revision" : "888331758bd66b35287a031447dbc28e38f485ae",
+        "version" : "0.1.4"
+      }
+    },
+    {
+      "identity" : "swipeactions",
+      "kind" : "remoteSourceControl",
+      "location" : "https://github.com/aheze/SwipeActions.git",
+      "state" : {
+        "revision" : "41e6f6dce02d8cfa164f8c5461a41340850ca3ab",
+        "version" : "1.1.0"
+      }
+    }
+  ],
+  "version" : 2
+}

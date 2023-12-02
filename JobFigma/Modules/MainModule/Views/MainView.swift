@@ -44,14 +44,16 @@ struct MainView: View {
     let totalElements = 10 // Total elements
     
 
+ 
+  
     
 
     
     
     var body: some View {
-        NavigationView{
+        
             VStack {
-       
+                NavigationView{
                 ScrollView {
                     
                     VStack {
@@ -61,7 +63,9 @@ struct MainView: View {
                                 icon: "plus",
                                 type: .menuIcon ,
                                 action: {
-                                    print("Button tapped plus")
+                                    
+                                    avm.settings.isMenuOpen.toggle()
+                                    print(avm.settings.isMenuOpen)
                                 }
                             )
                             
@@ -192,14 +196,14 @@ struct MainView: View {
                                 
                             
                 
-                
+                .background(Color("Light"))
                 
             } 
 
             
             
             
-            .background(Color("Light"))
+            
           
             
         }
@@ -207,5 +211,8 @@ struct MainView: View {
 }
 
 #Preview {
-    MainView(avm: AppViewModel())
+    MainView(
+        avm: AppViewModel()
+        
+    )
 }

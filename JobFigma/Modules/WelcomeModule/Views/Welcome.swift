@@ -7,7 +7,10 @@
 
 import SwiftUI
 
-struct Welcome: View {
+struct WelcomeView: View {
+    
+    @ObservedObject var avm : AppViewModel
+    
     var body: some View {
         VStack {
             Spacer()
@@ -40,9 +43,11 @@ struct Welcome: View {
                     text: "Los gehts!",
                     type: .primary,
                     action: {
-                        print("Button tapped")
+                        avm.selectedView = .anmeldenView
                     }
                 )
+                .background(Color("PrimaryThemeColor"))
+                .cornerRadius(10)
             }
             Spacer() 
             
@@ -55,5 +60,5 @@ struct Welcome: View {
 }
 
 #Preview {
-    Welcome()
+    WelcomeView(avm: AppViewModel())
 }
